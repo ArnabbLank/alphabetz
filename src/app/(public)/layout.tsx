@@ -1,12 +1,14 @@
-import { Header } from '@/components/public/Header';
-import { Footer } from '@/components/public/Footer';
+import { TopBar } from '@/components/public/TopBar';
+import { SiteFooter } from '@/components/public/SiteFooter';
+import { MobileDock } from '@/components/public/MobileDock';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
+      <TopBar />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <SiteFooter />
+      <MobileDock />
     </>
   );
 }

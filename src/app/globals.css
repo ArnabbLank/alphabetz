@@ -1,19 +1,49 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap");
-
 @import "tailwindcss";
 
+/* ============================================================================
+   Brand tokens.
+
+   The blue ramp is MEASURED, not chosen: sampled from the institute's own
+   siteicon.png by canvas histogram. #285ba8 is 48% of the mark's pixels and is
+   therefore the brand blue. The previous theme declared #1e3a5f with an orange
+   accent, neither of which appears in the logo.
+
+       #204f95  16.2%      #285ba8  48.0%  <- brand
+       #2e65b8  10.9%      #3975d1   9.0%
+       #3d7cda   3.9%
+
+   Strategy is Committed: monochrome blue carrying large surfaces, on white,
+   with one warm spark held under ~5% of usage for the primary action only.
+   ========================================================================= */
 @theme inline {
+  /* blue ramp */
+  --color-brand-50: #eef4fc;
+  --color-brand-100: #d9e6f8;
+  --color-brand-200: #8fb6ea;
+  --color-brand-300: #3d7cda;
+  --color-brand-400: #3975d1;
+  --color-brand-500: #2e65b8;
+  --color-brand-600: #285ba8;
+  --color-brand-700: #204f95;
+  --color-brand-800: #1b4380;
+  --color-brand-900: #12325f;
+
+  /* ink + surface */
   --color-background: #ffffff;
-  --color-foreground: #171717;
+  --color-foreground: #101a2b;
+  --color-ink: #101a2b;
+  --color-ink-muted: #4a5568;
+  --color-hairline: #dde5f0;
 
-  --color-primary: #1e3a5f;
-  --color-primary-light: #2a4f7f;
-  --color-primary-dark: #142840;
-  --color-accent: #f97316;
-  --color-accent-light: #fb923c;
-  --color-accent-dark: #ea580c;
+  /* the single warm accent */
+  --color-spark: #ffcf5c;
+  --color-spark-ink: #4a3200;
 
-  --font-sans: "Inter", "Noto Sans Bengali", sans-serif;
+  /* type: display carries the voice, text carries the reading */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-text: var(--font-faustina), Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html {
@@ -23,77 +53,74 @@ html {
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-text);
 }
 
-/* Card hover effect */
-.card-hover {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+/* Headings take the display face by default so components need not restate it. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  text-wrap: balance;
 }
 
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
+::selection {
+  background: var(--color-spark);
+  color: var(--color-spark-ink);
 }
 
-/* Gradient overlay for hero sections */
-.gradient-overlay {
-  background: linear-gradient(
-    to right,
-    rgba(30, 58, 95, 0.95),
-    rgba(30, 58, 95, 0.7)
-  );
-}
-
-.gradient-overlay-dark {
-  background: linear-gradient(
-    to bottom,
-    rgba(20, 40, 64, 0.9),
-    rgba(20, 40, 64, 0.6)
-  );
-}
-
-/* Accent gradient for buttons/badges */
-.gradient-accent {
-  background: linear-gradient(135deg, #f97316, #ea580c);
-}
-
-/* Subtle background pattern */
-.bg-pattern {
-  background-image: radial-gradient(
-    circle at 1px 1px,
-    rgba(30, 58, 95, 0.05) 1px,
-    transparent 0
-  );
-  background-size: 24px 24px;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #94a3b8;
+/* A visible focus ring is a requirement, not a preference (ALZ-128). */
+:focus-visible {
+  outline: 3px solid var(--color-brand-400);
+  outline-offset: 3px;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+/* Graph-paper trace. The one material nod to the classroom, used sparingly. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  -webkit-mask-image: radial-gradient(120% 90% at 20% 0%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(120% 90% at 20% 0%, #000 30%, transparent 78%);
 }
 
-/* Focus ring utility */
-.focus-ring {
-  outline: none;
+/* Subject ticker. Pauses on hover; disabled entirely under reduced motion. */
+@keyframes ticker-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-.focus-ring:focus-visible {
-  outline: 2px solid #2a4f7f;
-  outline-offset: 2px;
+.animate-ticker {
+  animation: ticker-slide 34s linear infinite;
+}
+
+.ticker-host:hover .animate-ticker {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-ticker {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
