@@ -10,8 +10,13 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+
+# testing artifacts
 /coverage
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
 
 # next.js
 /.next/
